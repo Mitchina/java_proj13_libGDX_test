@@ -18,7 +18,15 @@ public class Boot extends Game {
     public void create(){
         this.widthScreen = Gdx.graphics.getWidth();
         this.heightScreen = Gdx.graphics.getHeight();
-        this.orthographicCamera = new OrthographicCamera();
+        // width and height of the camera means how many of pixel units I want to draw in my tiled map
+        // to fix the Aspect Ratio:
+        // we need to multiply the unit we want for the height by the height divided by the width
+        // example: this.orthographicCamera = new OrthographicCamera(30, 30 * (heightScreen / widthScreen));
+        // as the tileset have 32 pixels.
+        // I want to see 23 width x 19 height units of it
+        this.orthographicCamera = new OrthographicCamera(23f, 19f * (heightScreen / widthScreen));
+        //this.orthographicCamera = new OrthographicCamera();
+        // comparing, even though it looks smaller, it seems more accurate
         this.orthographicCamera.setToOrtho(false, widthScreen, heightScreen);
 
         // passing the GameScreen

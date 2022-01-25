@@ -35,13 +35,23 @@ public class TileMapHelper {
         // com.mygdx.game.desktop.DesktopLauncher.main
         // load our map
         //.core/main/resources/maps/tiles.tmx
-        //tiledMap = new TmxMapLoader().load("main/resources/maps/tiles.tmx");
+        //tiledMap = new TmxMapLoader().load("resources/maps/tiles.tmx");
         //tiledMap = new TmxMapLoader().load("../maps/tiles.tmx");
         tiledMap = new TmxMapLoader().load("D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\maps\\tiles.tmx");
+        //tiledMap = new TmxMapLoader().load("D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\maps\\tiles2test.tmx");
 
         // access the map Objects
         parseMapObjects(tiledMap.getLayers().get("Objects").getObjects());
-        return new OrthogonalTiledMapRenderer(tiledMap);
+
+        // the renderer will be able to display the level map
+        // if we add 2 arguments, it will fill up the map and the scale as well
+        // telling it how many units are in a pixel
+        //renderer = new OrthogonalTiledMapRenderer(tiledMap);
+        // examples:
+        // I'm using 32 pixels in the tiles
+        return new OrthogonalTiledMapRenderer(tiledMap, 1/32f);
+        //return new OrthogonalTiledMapRenderer(tiledMap);
+        //return renderer;
     }
 
     private void parseMapObjects(MapObjects mapObjects){
