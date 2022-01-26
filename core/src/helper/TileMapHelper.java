@@ -1,12 +1,16 @@
 package helper;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -16,12 +20,27 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.GameScreen;
 
 import java.awt.*;
+import java.util.Arrays;
 
 import static helper.Constants.PPM;
 
-public class TileMapHelper {
+public class TileMapHelper extends ApplicationAdapter {
 
-    private TiledMap tiledMap;
+    // Assets manager
+    public AssetManager manager;
+
+    String tmxAbsolutePath = "D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\maps\\tiles2_test.tmx";
+    String tmxRelativePath = "../resources/maps/tiles.tmx";
+
+    // map
+    public TiledMap tiledMap;
+    //public TiledMapTileLayer terrainLayer; // for ground and water - Bottom Layer
+
+    public int[] groundLayerIndices; // for ground and water - Bottom Layer
+    public int[] belowCharLayerIndices; // ex. for flowers - Top Layer
+    public int[] decorationLayersIndices; // for houses, bushes and trees - EvenMoreTopLayer
+
+
     // access to world objs
     private GameScreen gameScreen;
 
@@ -31,27 +50,37 @@ public class TileMapHelper {
     }
 
     public OrthogonalTiledMapRenderer setupMap(){
-        // game.desktop.src
-        // com.mygdx.game.desktop.DesktopLauncher.main
-        // load our map
-        //.core/main/resources/maps/tiles.tmx
-        //tiledMap = new TmxMapLoader().load("resources/maps/tiles.tmx");
-        //tiledMap = new TmxMapLoader().load("../maps/tiles.tmx");
-        tiledMap = new TmxMapLoader().load("D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\maps\\tiles.tmx");
-        //tiledMap = new TmxMapLoader().load("D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\maps\\tiles2test.tmx");
+        // Map loading
+        /*
+        manager = new AssetManager();
+        manager.setLoader(TiledMap.class, new TmxMapLoader());
+        manager.load(tmxAbsolutePath, TiledMap.class);
+        manager.finishLoading();
+        tiledMap = manager.get(tmxAbsolutePath, TiledMap.class);
+        */
+        tiledMap = new TmxMapLoader().load(tmxAbsolutePath);
 
-        // access the map Objects
-        parseMapObjects(tiledMap.getLayers().get("Objects").getObjects());
+        //tiledMap.getLayers().get(index).setVisible(visible);
 
-        // the renderer will be able to display the level map
-        // if we add 2 arguments, it will fill up the map and the scale as well
-        // telling it how many units are in a pixel
-        //renderer = new OrthogonalTiledMapRenderer(tiledMap);
-        // examples:
-        // I'm using 32 pixels in the tiles
-        return new OrthogonalTiledMapRenderer(tiledMap, 1/32f);
-        //return new OrthogonalTiledMapRenderer(tiledMap);
-        //return renderer;
+        // Reading map Layers
+        MapLayers mapLayers = tiledMap.getLayers();
+        //terrainLayer = (TiledMapTileLayer) mapLayers.get("BottomLayer");
+        groundLayerIndices = new int[]{
+                mapLayers.getIndex("BottomLayer"),
+        };
+        belowCharLayerIndices = new int[]{
+                mapLayers.getIndex("TopLayer"),
+        };
+        decorationLayersIndices = new int[]{
+                mapLayers.getIndex("EvenMoreTopLayer"),
+        };
+
+        return new OrthogonalTiledMapRenderer (tiledMap, 1/32f);
+        //return new OrthogonalTiledMapRenderer (tiledMap);
+    }
+
+    public int[] returnLayersArray(){
+        return decorationLayersIndices;
     }
 
     private void parseMapObjects(MapObjects mapObjects){
@@ -100,6 +129,12 @@ public class TileMapHelper {
         PolygonShape shape = new PolygonShape();
         shape.set(worldVertices);
         return (Shape) shape;
+    }
+
+    @Override
+    public void dispose () {
+        // Free resources
+        manager.dispose();
     }
 
 }

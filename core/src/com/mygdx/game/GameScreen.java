@@ -32,7 +32,7 @@ public class GameScreen extends ScreenAdapter {
     private Box2DDebugRenderer box2DDebugRenderer;
 
     // displaying in a 2d plane
-    private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
+    private OrthogonalTiledMapRenderer renderer;
     // tilemap = load our map. take it and draw it to the 2d plane
     private TileMapHelper tileMapHelper;
     private OrthographicCamera camera;
@@ -50,12 +50,16 @@ public class GameScreen extends ScreenAdapter {
         this.box2DDebugRenderer = new Box2DDebugRenderer();
 
         this.tileMapHelper = new TileMapHelper(this); // see later the load function
+
         // call our img
-        this.orthogonalTiledMapRenderer = tileMapHelper.setupMap();
+        // Instantiation of the render for the map object
+        this.renderer = tileMapHelper.setupMap();
+        //this.renderer = new OrthogonalTiledMapRenderer(tileMapHelper.tiledMap, 1/32f);
+
 
         //this.spriteBatch = new SpriteBatch();
 
-        spriteBatch = orthogonalTiledMapRenderer.getBatch();
+        spriteBatch = renderer.getBatch();
         player = new Player();
     }
 
@@ -72,7 +76,7 @@ public class GameScreen extends ScreenAdapter {
         // update our img
         // setting the camera to be the view of the renderer
         // the renderer will only displays what the camera sees
-        orthogonalTiledMapRenderer.setView(camera);
+        renderer.setView(camera);
 
         // close the game when pressed Esc button
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
@@ -111,7 +115,9 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta){
         // clear the screen - removing graphics and animations from the previous frame
         // calling a black screen to clear the screen
-        Gdx.gl.glClearColor(0,0,0,1);
+        //rgb(234,182,118) all colors need to be divided by 255 = (0.91f, 0.71f, 0.46f)
+        //Gdx.gl.glClearColor(0,0,0,1); // black screen
+        Gdx.gl.glClearColor(0.91f, 0.71f, 0.46f,1);
         // and this below will clear my game screen
         // passing a mask as argument
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -121,18 +127,31 @@ public class GameScreen extends ScreenAdapter {
         // before rendering the objs, render img
         // rendering our render - drawing things themselves up on the screen
         // what to display and where to display
-        orthogonalTiledMapRenderer.render();
+
+        //renderer.render(tileMapHelper.returnLayersArray());
+
+        // rendering background
+        renderer.render(tileMapHelper.groundLayerIndices);
+        renderer.render(tileMapHelper.belowCharLayerIndices);
 
         // draw our player using the batch
         // telling it where it needs to begin and end
         spriteBatch.begin();
         // render all the objs
 
+        //renderer.renderTileLayer(tileMapHelper.terrainLayer);
+
         // here we need to draw our player
         player.draw(spriteBatch);
 
         // stop drawing
         spriteBatch.end();
+
+        // rendering foreground
+        renderer.render(tileMapHelper.decorationLayersIndices);
+
+
+
         // ppm = Pixels Per Meter
         // amount of potential image detail that a camera offers at a given distance.
         // creating a final constant for it
@@ -152,6 +171,8 @@ public class GameScreen extends ScreenAdapter {
         camera.update();
 
     }
+
+
 
     public World getWorld(){
         return world;
