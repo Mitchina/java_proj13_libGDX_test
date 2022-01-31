@@ -3,6 +3,7 @@ package model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -11,60 +12,53 @@ public class Player {
     // we need to know its position on the screen
     // and its sprite sheet
     public Vector2 position; // x and y
-    public Texture spriteSheet;
-    public TextureRegion[] spriteFrames;
+
+    public Animation<TextureRegion> animation;  // Must declare frame type (TextureRegion)
+    public Spritesheet spritesheet;
+
+    //String playerSpritesAbsolutePath = "D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\img\\myPlayerTest.png";
+    String player1SpritesAbsolutePath = "D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\img\\characterAnimationSheet.png";
+    String player2SpritesAbsolutePath = "D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\img\\character2AnimationSheet.png";
+    int widthEachPlayer = 48;
+    int heightEachPlayer = 48;
+    //int pixelsOfPlayer = 64;
+
+    // A variable for tracking elapsed time for the animation
+    private float stateTime;
+
+
+    /* characterAnimationSheet.png
+        Animations:
+        0-5 = walking south
+        6-13 = base
+        14-19 = walking left
+        20-25 = walking right
+        26-30 = walking north
+         */
+        /* character2AnimationSheet.png
+        Animations:
+        0-3 = base
+        4-6 = front idle
+        7-9 = left idle
+        10-11 = back idle
+        12-14 = right idle
+        15-19 = front walking
+        20-24 = left walking
+        25-29 = right walking
+        30-34 = back walking
+         */
 
     public Player() {
         // default position
         position = new Vector2(5,5);
-        //spriteSheet = new Texture(Gdx.files.internal("img/character_test.png"));
-        spriteSheet = new Texture(new FileHandle("D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\img\\character_test2.png"));
 
-        // 2d array
-        // rows and columns
-        // test 1
-        // each character on the sprite sheet has width of 67 pixels and height of 70 pixels
+        spritesheet = new Spritesheet(player1SpritesAbsolutePath, widthEachPlayer, heightEachPlayer);
+        // returns the animation of the Spritesheet class
+        animation = spritesheet.createAnimation(0, 5, 0.25f);
 
-        // test 2
-        // each character on the sprite sheet has width of 112,5 pixels and height of 130,75 pixels
-
-        // test 3
-        // each character on the sprite sheet has width of 101 pixels and height of 105 pixels
-        TextureRegion[][] spriteSheetFrames = TextureRegion.split(spriteSheet, 101, 105);
-
-        // counting how many sprite we have:
-        int counter = 0;
-        // for loop to be able to access each and every element found
-        // find how many rows we have in our spriteSheet
-        for(int row = 0; row < spriteSheetFrames.length; row++ ){
-            // access the columns
-            // getting the amount of columns found here within a single row
-            // find columns per row
-            for(int column = 0; column < spriteSheetFrames[row].length; column++){
-                counter++;
-            }
-        }
-
-        // create a new array of a certain size and that size is going to be of size counter
-        // how many sprites are in that spriteSheet:
-        spriteFrames = new TextureRegion[counter]; // it is going to be of size 53 // and 32
-
-        // reset counter
-        // this for loop is very similar to the above one
-        // we are accessing the rows, and the rows are in an array
-        // but we're accessing them differently, telling it to take
-        // the 2d array spriteSheetFrames and return every row as a
-        // TextureRegion[] array
-        // storing each spriteSheetFrames in the array as a sprite
-        counter = 0;
-        // access animationFrames
-        for(TextureRegion[] row : spriteSheetFrames){
-            // access sprite from rows
-            for(TextureRegion sprite : row){
-                // storing the sprite in the position of the counter (spriteFrames[0], etc)
-                spriteFrames[counter++] = sprite;
-            }
-        }
+        // init the stateTime variable
+        // it is like the game time
+        stateTime = 0f;
     }
 
     // draw the player on the screen
@@ -80,15 +74,22 @@ public class Player {
 
         // as it is batch now, this is not 101 pixels anymore, this is 101 units
         // my unit scale in TileMapHelper was 1/32f
-        batch.draw(spriteFrames[0], position.x, position.y, 101 * (1/32f), 105 * (1/32f));
-        //  Splitting the Sprite sheet:
+        //batch.draw(spriteFrames[0], position.x, position.y, widthEachPlayer * (1/32f), heightEachPlayer * (1/32f));
 
-
+        // draw the animation I've created
+        // the true is that we want our animation to loop
+        // Get current frame of animation for the current stateTime
+        TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
+        batch.draw(currentFrame, position.x, position.y, widthEachPlayer * (1/32f), heightEachPlayer * (1/32f));
 
     }
 
     // update its position and anything regarding the player's properties
     public void update(float deltaTime){
-
+        // position.x++; // will increases one unit per second
+        //position.x -= deltaTime;
+        position.y -= deltaTime;
+        // modify the stateTime using deltaTime to not be stuck at 0
+        stateTime += deltaTime;
     }
 }

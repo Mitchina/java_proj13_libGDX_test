@@ -41,6 +41,9 @@ public class GameScreen extends ScreenAdapter {
     public Batch spriteBatch;
     public Player player;
 
+    float tilesWidth = 14f;
+    float tilesHeight = 14f;
+
 
     public GameScreen(OrthographicCamera camera){
         this.camera = camera;
@@ -134,6 +137,10 @@ public class GameScreen extends ScreenAdapter {
         renderer.render(tileMapHelper.groundLayerIndices);
         renderer.render(tileMapHelper.belowCharLayerIndices);
 
+        // update the player before drawing it
+        // passing the deltaTime
+        player.update(delta);
+
         // draw our player using the batch
         // telling it where it needs to begin and end
         spriteBatch.begin();
@@ -165,8 +172,11 @@ public class GameScreen extends ScreenAdapter {
         // it changes the window and the camera remains the same
         // looking the actual town map a bit differently - fix:
         // set the viewport of the camera
-        camera.viewportWidth = 23f; // display 23 units
-        camera.viewportHeight = 19f * height / width; // without parenthesis
+        //camera.viewportWidth = 23f; // display 23 units
+        //camera.viewportHeight = 19f * height / width; // without parenthesis
+        // testing 14 f
+        camera.viewportWidth = tilesWidth; // display 14 units
+        camera.viewportHeight = tilesHeight * height / width; // without parenthesis
         // update the camera
         camera.update();
 

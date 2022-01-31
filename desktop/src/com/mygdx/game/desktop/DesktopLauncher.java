@@ -11,6 +11,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "TiledMapGame";
+		//config.resizable = false;
 		config.width = 480;
 		config.height = 480;
 
