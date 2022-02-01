@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.controller.LevelController;
 import helper.TileMapHelper;
 import model.Player;
 
@@ -31,11 +32,13 @@ public class GameScreen extends ScreenAdapter {
     // world obj to start the 2d boxes
     public static World world; // static to refers it in player
 
-    */
+
 
 
     // see the bodies textures of the boxes
     private Box2DDebugRenderer box2DDebugRenderer;
+
+    */
 
 
     /*
@@ -64,6 +67,8 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(OrthographicCamera camera){
         this.camera = camera;
 
+        LevelController.initializeController();
+
         /*
 
         // passing vector2d with x and y, later add gravity in the y axis
@@ -72,12 +77,8 @@ public class GameScreen extends ScreenAdapter {
         // we are telling the physics simulation that any obj that is not beeing used -> go to sleep
         this.world = new World(new Vector2(0, 0), true); // in this game we don't need gravity
 
-        */
-
         this.box2DDebugRenderer = new Box2DDebugRenderer();
         this.box2DDebugRenderer.setDrawBodies(true); //This method set the body lines to visible
-
-        /*
 
         this.tileMapHelper = new TileMapHelper(this); // see later the load function
 
@@ -86,30 +87,41 @@ public class GameScreen extends ScreenAdapter {
         this.renderer = tileMapHelper.setupMap();
         //this.renderer = new OrthogonalTiledMapRenderer(tileMapHelper.tiledMap, 1/32f);
 
-
         //this.spriteBatch = new SpriteBatch();
         spriteBatch = renderer.getBatch();
 
         */
 
-
         player = new Player(48, 48);
     }
 
     private void update(){
+        /*
         // creating a step for our world
         //60 fps
         world.step(1/60f, 6, 2);
 
+         */
+
         // implement camera update. camera position needs to be updated
         cameraUpdate();
 
+        /*
+
         spriteBatch.setProjectionMatrix(camera.combined);
+
+        */
+
+        //LevelController.update(delta);
+
+        /*
 
         // update our img
         // setting the camera to be the view of the renderer
         // the renderer will only displays what the camera sees
         renderer.setView(camera);
+
+        */
 
         // close the game when pressed Esc button
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
@@ -155,12 +167,17 @@ public class GameScreen extends ScreenAdapter {
 
         this.update();
 
+        LevelController.update(delta);
+
         // before rendering the objs, render img
         // rendering our render - drawing things themselves up on the screen
         // what to display and where to display
 
+        LevelController.draw(delta);
+
         //renderer.render(tileMapHelper.returnLayersArray());
 
+        /*
         // rendering background
         renderer.render(tileMapHelper.groundLayerIndices);
         renderer.render(tileMapHelper.belowCharLayerIndices);
@@ -190,6 +207,7 @@ public class GameScreen extends ScreenAdapter {
         // creating a final constant for it
         //box2DDebugRenderer.render(world, camera.combined.scl(PPM)); // it was that way before!
         box2DDebugRenderer.render(world, camera.combined);
+        */
     }
 
     @Override
@@ -207,12 +225,6 @@ public class GameScreen extends ScreenAdapter {
         // update the camera
         camera.update();
 
-    }
-
-
-
-    public World getWorld(){
-        return world;
     }
 
 
