@@ -1,4 +1,4 @@
-package helper;
+package com.mygdx.game.helper;
 
 public class Constants {
 

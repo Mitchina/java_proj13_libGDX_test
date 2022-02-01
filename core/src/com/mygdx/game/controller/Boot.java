@@ -1,8 +1,9 @@
-package com.mygdx.game;
+package com.mygdx.game.controller;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.mygdx.game.GameScreen;
 
 public class Boot extends Game {
 
@@ -33,6 +34,8 @@ public class Boot extends Game {
         //this.orthographicCamera = new OrthographicCamera();
         // comparing, even though it looks smaller, it seems more accurate
         this.orthographicCamera.setToOrtho(false, widthScreen, heightScreen);
+
+        this.orthographicCamera.position.set(this.orthographicCamera.viewportWidth/2f, this.orthographicCamera.viewportHeight/2f, 0);
 
         // passing the GameScreen
         setScreen(new GameScreen(orthographicCamera));

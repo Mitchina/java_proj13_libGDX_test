@@ -1,12 +1,13 @@
 package com.mygdx.game.controller;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import helper.TileMapHelper;
+import com.mygdx.game.GameScreen;
+import com.mygdx.game.helper.TileMapHelper;
 
 public class LevelController {
     // displaying in a 2d plane
@@ -22,8 +23,8 @@ public class LevelController {
     // see the bodies textures of the boxes
     private static Box2DDebugRenderer box2DDebugRenderer;
 
-    public static void initializeController(){
-        tileMapHelper = new TileMapHelper(this); // see later the load function
+    public static void initializeController(GameScreen gameScreen){
+        tileMapHelper = new TileMapHelper(gameScreen); // see later the load function
 
         // call our img
         // Instantiation of the render for the map object
@@ -38,15 +39,22 @@ public class LevelController {
     }
 
     // creating an update function and a draw function
+    // before rendering the objs, render img
+    // rendering our render - drawing things themselves up on the screen
+    // what to display and where to display
 
-    public static void draw(float deltaTime){
+    public static void draw(OrthographicCamera camera){
         // rendering background
         renderer.render(tileMapHelper.groundLayerIndices);
         renderer.render(tileMapHelper.belowCharLayerIndices);
 
+        /*
+
         // update the player before drawing it
         // passing the deltaTime
         player.update(deltaTime);
+
+        */
 
         // draw our player using the batch
         // telling it where it needs to begin and end
@@ -56,7 +64,7 @@ public class LevelController {
         //renderer.renderTileLayer(tileMapHelper.terrainLayer);
 
         // here we need to draw our player
-        player.draw(spriteBatch);
+        PlayerController.player.draw(spriteBatch);
 
         // stop drawing
         spriteBatch.end();
@@ -72,7 +80,7 @@ public class LevelController {
 
     }
 
-    public static void update(float deltaTime){
+    public static void update(float deltaTime, OrthographicCamera camera){
         // creating a step for our world
         //60 fps
         world.step(1/60f, 6, 2);
@@ -83,6 +91,10 @@ public class LevelController {
         // the renderer will only displays what the camera sees
         renderer.setView(camera);
 
+    }
+
+    public World getWorld(){
+        return this.world;
     }
 
 

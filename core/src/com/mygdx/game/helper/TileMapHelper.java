@@ -1,16 +1,12 @@
-package helper;
+package com.mygdx.game.helper;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -18,19 +14,20 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.GameScreen;
+import com.mygdx.game.controller.LevelController;
 
 import java.awt.*;
-import java.util.Arrays;
 
-import static helper.Constants.PPM;
+import static com.mygdx.game.helper.Constants.PPM;
 
 public class TileMapHelper extends ApplicationAdapter {
 
     // Assets manager
     public AssetManager manager;
 
-    String tmxAbsolutePath = "D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\maps\\tiles2_test.tmx";
-    String tmxRelativePath = "../resources/maps/tiles.tmx";
+    //String tmxAbsolutePath = "D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\maps\\tiles2_test.tmx";
+    String tmxAbsolutePath = "D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\com\\mygdx\\game\\resources\\maps\\tiles2_test.tmx";
+    String tmxRelativePath = "maps/tiles2_test.tmx";
 
     // map
     public TiledMap tiledMap;
@@ -43,6 +40,7 @@ public class TileMapHelper extends ApplicationAdapter {
 
     // access to world objs
     private GameScreen gameScreen;
+    private LevelController levelController;
 
     public TileMapHelper(GameScreen gameScreen){
         this.gameScreen = gameScreen;
@@ -99,7 +97,7 @@ public class TileMapHelper extends ApplicationAdapter {
         // define body
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
-        Body body = gameScreen.getWorld().createBody(bodyDef);
+        Body body = levelController.getWorld().createBody(bodyDef);
         // now we need a shape
 
         Shape shape = createPolygonShape(polygonMapObject);

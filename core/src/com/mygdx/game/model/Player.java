@@ -1,8 +1,5 @@
-package model;
+package com.mygdx.game.model;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.mygdx.game.GameScreen;
+import com.mygdx.game.controller.LevelController;
 
 import java.util.HashMap;
 
@@ -31,8 +28,8 @@ public class Player {
     public String currentAnimation;
 
     //String playerSpritesAbsolutePath = "D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\img\\myPlayerTest.png";
-    String player1SpritesAbsolutePath = "D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\img\\characterAnimationSheet.png";
-    String player2SpritesAbsolutePath = "D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\resources\\img\\character2AnimationSheet.png";
+    String player1SpritesAbsolutePath = "D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\com\\mygdx\\game\\resources\\img\\characterAnimationSheet.png";
+    String player2SpritesAbsolutePath = "D:\\ju_javaPrograms\\java_proj13_test\\core\\src\\com\\mygdx\\game\\resources\\img\\character2AnimationSheet.png";
     float widthEachPlayer;
     float heightEachPlayer;
     //int pixelsOfPlayer = 64;
@@ -164,14 +161,14 @@ public class Player {
         1. Now we have this player body with all its properties
         2. this body is being created inside the world
         */
-        Body playerBody = GameScreen.world.createBody(bodyDefinition);
+        Body playerBody = LevelController.world.createBody(bodyDefinition);
         // set this class and pass all those information to the player class
         playerBody.setUserData(this); // this to refer this class and this obj
 
         // how it looks in the real world? // the class is called PolygonShape, and the form will be of rectangle
         PolygonShape rectangleShape = new PolygonShape();
         // get half width and half height, the center of our box, the angle = 0 cause we are not gonna rotate it
-        rectangleShape.setAsBox(this.widthEachPlayer/2, this.heightEachPlayer/2, new Vector2(this.widthEachPlayer/2, this.heightEachPlayer/2), 0f);
+        rectangleShape.setAsBox(this.widthEachPlayer/2-1.1f, this.heightEachPlayer/2-1.3f, new Vector2(this.widthEachPlayer/2, this.heightEachPlayer/2+.05f), 0f);
         //rectangleShape.setAsBox(this.widthEachPlayer/2, this.heightEachPlayer/2);
 
         // to attach the shape to our body, we need first attach it using fixtures
