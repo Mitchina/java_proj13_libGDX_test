@@ -26,19 +26,35 @@ public class GameScreen extends ScreenAdapter {
     // to render the tiledmap
     //private SpriteBatch batch;
 
+    /*
+
     // world obj to start the 2d boxes
-    private World world;
+    public static World world; // static to refers it in player
+
+    */
+
+
     // see the bodies textures of the boxes
     private Box2DDebugRenderer box2DDebugRenderer;
 
+
+    /*
     // displaying in a 2d plane
     private OrthogonalTiledMapRenderer renderer;
     // tilemap = load our map. take it and draw it to the 2d plane
     private TileMapHelper tileMapHelper;
+    */
+
+
+
     private OrthographicCamera camera;
 
+    /*
     // draw our player sprites on the screen
     public Batch spriteBatch;
+    */
+
+
     public Player player;
 
     float tilesWidth = 14f;
@@ -48,9 +64,20 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(OrthographicCamera camera){
         this.camera = camera;
 
+        /*
+
         // passing vector2d with x and y, later add gravity in the y axis
-        this.world = new World(new Vector2(0, 0), false);
+        //this.world = new World(new Vector2(0, 0), false);
+        //adding gravity to the y axis = -10 pushing our player down // when it is slepping we don't need to check
+        // we are telling the physics simulation that any obj that is not beeing used -> go to sleep
+        this.world = new World(new Vector2(0, 0), true); // in this game we don't need gravity
+
+        */
+
         this.box2DDebugRenderer = new Box2DDebugRenderer();
+        this.box2DDebugRenderer.setDrawBodies(true); //This method set the body lines to visible
+
+        /*
 
         this.tileMapHelper = new TileMapHelper(this); // see later the load function
 
@@ -61,9 +88,12 @@ public class GameScreen extends ScreenAdapter {
 
 
         //this.spriteBatch = new SpriteBatch();
-
         spriteBatch = renderer.getBatch();
-        player = new Player();
+
+        */
+
+
+        player = new Player(48, 48);
     }
 
     private void update(){
@@ -93,8 +123,6 @@ public class GameScreen extends ScreenAdapter {
         else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
             camera.position.x += 3; // move the camera forward
         }
-
-
     }
 
     private void cameraUpdate(){
@@ -157,12 +185,11 @@ public class GameScreen extends ScreenAdapter {
         // rendering foreground
         renderer.render(tileMapHelper.decorationLayersIndices);
 
-
-
         // ppm = Pixels Per Meter
         // amount of potential image detail that a camera offers at a given distance.
         // creating a final constant for it
-        box2DDebugRenderer.render(world, camera.combined.scl(PPM));
+        //box2DDebugRenderer.render(world, camera.combined.scl(PPM)); // it was that way before!
+        box2DDebugRenderer.render(world, camera.combined);
     }
 
     @Override

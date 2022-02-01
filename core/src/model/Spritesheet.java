@@ -11,6 +11,7 @@ public class Spritesheet {
     public TextureRegion[] spriteFrames;
 
     public Animation<TextureRegion> animation;  // Must declare frame type (TextureRegion)
+    public Animation<TextureRegion> flippedAnimation;
 
     public Spritesheet(String pathToFile, int eachSpriteWidth, int eachSpriteHeight){
         //spriteSheet = new Texture(Gdx.files.internal("img/character_test.png"));
@@ -86,14 +87,12 @@ public class Spritesheet {
         }
 
         /*
-
         animationFrames[0] = spriteFrames[0];
         animationFrames[1] = spriteFrames[1];
         animationFrames[2] = spriteFrames[2];
         animationFrames[3] = spriteFrames[3];
         animationFrames[4] = spriteFrames[4];
         animationFrames[5] = spriteFrames[5];
-
         */
 
         // tell it the speed of the animation, for example 1f = 1 sec and then the array
@@ -101,5 +100,30 @@ public class Spritesheet {
         //animation = new Animation(1f, animationFrames);
         animation = new Animation<TextureRegion>(animationSpeed, animationFrames);
         return animation;
+    }
+
+    // flip the animation so it will face the other direction
+    public Animation flitAnimation(Animation originalAnimation, boolean flipX, boolean flipY){
+        // we need frames to flip
+        // if we have the player sprites that only goes to the right we can flip it
+        // get the length of the array
+        int frameCount = originalAnimation.getKeyFrames().length;
+
+        // creating a new array
+        // we need it to be the exact size of the original array
+        TextureRegion[] flippedFrames = new TextureRegion[frameCount];
+
+        // we want to continue looping until is frameCount -1 - to get the truth number
+        // because the frames start at 0, but the length count from 1
+        for(int index = 0; index <=frameCount -1; index++){
+            // access the correct elem
+            // example:
+            //TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
+            flippedFrames[index] = (TextureRegion) (originalAnimation.getKeyFrames())[index];
+            // boolean to flip horizontally and to flip vertically
+            flippedFrames[index].flip(flipX, flipY);
+        }
+        flippedAnimation = new Animation<TextureRegion>(originalAnimation.getFrameDuration(), flippedFrames);
+        return flippedAnimation;
     }
 }
