@@ -15,24 +15,13 @@ import com.mygdx.game.model.Player;
 // point the camera
 public class GameScreen extends ScreenAdapter {
     private OrthographicCamera camera;
-
-    /*
-    public Player player;
-    */
-
     float tilesWidth = 14f;
     float tilesHeight = 14f;
 
-
     public GameScreen(OrthographicCamera camera){
         this.camera = camera;
-
         LevelController.initializeController(this);
-
         PlayerController.initializeController();
-        /*
-        player = new Player(48, 48);
-        */
     }
 
     private void update(){
